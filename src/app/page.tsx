@@ -6,7 +6,7 @@ import { api } from "./api";
 interface TaskProps {
   id: string;
   description: string;
-  date: string;
+  date_task: string;
   status: boolean;
 }
 
