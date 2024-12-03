@@ -6,8 +6,10 @@ import { api } from "./api";
 interface TaskProps {
   id: string;
   description: string;
-  date_task: string;
-  status: boolean;
+  dataHoraPagamento: string;
+  statusPagamento: boolean;
+  valores_id: string;
+  meioPagamento: string;
 }
 
 export default function Home() {
@@ -17,18 +19,18 @@ export default function Home() {
   const dateRef = useRef<HTMLInputElement | null>(null)
 
   // Inicializa lista de tarefas da página como lista vazia
-  const [tasks, setTasks] = useState<TaskProps[]>([])
+  const [tasks, setPagamento] = useState<TaskProps[]>([])
 
-  // Ao renderizar a página, chama a função "readTasks"
+  // Ao renderizar a página, chama a função "readPagamento"
   useEffect(() => {
-    readTasks();
+    readPagamento();
   }, [])
 
   // Busca as tarefas no banco de dados via API
-  async function readTasks() {
+  async function readPagamento() {
     const response = await api.get("/tasks")
     console.log(response.data)
-    setTasks(response.data)
+    setPagamento(response.data)
   }
 
   // Cria uma nova tarefa
@@ -38,15 +40,15 @@ export default function Home() {
       description: descriptionRef.current?.value,
       date: dateRef.current?.value
     }) 
-    setTasks(allTasks => [...allTasks, response.data])
+    setPagamento(allPagamento => [...allPagamento, response.data])
   }
 
   // Deleta uma tarefa
   async function deleteTask(id: string){
     try{
       await api.delete("/tasks/" + id)
-      const allTasks = tasks.filter((task) => task.id !== id)
-      setTasks(allTasks)
+      const allPagamento = tasks.filter((task) => task.id !== id)
+      setPagamento(allPagamento)
     }
     catch(err){
       alert(err)
@@ -59,7 +61,7 @@ export default function Home() {
         status: true,
       })
       const response = await api.get("/tasks")
-      setTasks(response.data)
+      setPagamento(response.data)
     }
     catch(err){
       alert(err)
@@ -89,8 +91,8 @@ export default function Home() {
           {tasks.map((task) => (
             <article className="w-full bg-slate-200 text-slate-800 p-2 mb-4 rounded relative hover:bg-sky-300" key={task.id}>
               <p>{task.description}</p>
-              <p>{new Date(task.date_task).toLocaleDateString()}</p>
-              <p>{task.status.toString()}</p>
+              <p>{new Date(task.dataHoraPagamento).toLocaleDateString()}</p>
+              <p>{task.statusPagamento.toString()}</p>
 
 
               <button className="flex absolute right-10 -top-2 bg-green-600 w-7 h-7 items-center justify-center text-slate-200" onClick={() => setTaskDone(task.id)}><FiCheck></FiCheck></button>
